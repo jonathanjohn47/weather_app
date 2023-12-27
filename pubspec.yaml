@@ -42,6 +42,7 @@ dependencies:
   percent_indicator: ^4.2.3
   geolocator: ^10.1.0
   autocomplete_textfield: ^2.0.1
+  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:

@@ -5,6 +5,7 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:get/get.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:weather_app/five_day_forecast/ui/five_day_forecast_page.dart';
 import 'package:weather_app/models/suggestions_model.dart';
 import 'package:weather_app/models/weather_response_model.dart';
@@ -119,7 +120,13 @@ class HomePage extends StatelessWidget {
                   padding: EdgeInsets.symmetric(vertical: 4.w),
                   child: Obx(() {
                     return getController.isLoading.value
-                        ? Center(child: CircularProgressIndicator())
+                        ? Shimmer.fromColors(
+                      /*Color(0xFF5271ff),
+                      Color(0xFF38b6ff),*/
+                            baseColor: Color(0xFF5271ff),
+                            highlightColor: Color(0xFF38b6ff),
+                            child: _weatherCard(WeatherResponseModel.empty()),
+                          )
                         : _weatherCard(
                             getController.weatherResponseModel.value);
                   }),
@@ -177,7 +184,7 @@ class HomePage extends StatelessWidget {
           ),
           width: 80.w,
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.w),
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.w),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -222,11 +229,13 @@ class HomePage extends StatelessWidget {
                       fit: BoxFit.cover,
                     ),
                     SizedBox(width: 2.w),
-                    Text(
-                      "${weatherResponseModel.current.condition.text}",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 5.w,
+                    Expanded(
+                      child: Text(
+                        "${weatherResponseModel.current.condition.text}",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 5.w,
+                        ),
                       ),
                     ),
                   ],
