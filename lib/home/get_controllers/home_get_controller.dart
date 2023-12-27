@@ -21,54 +21,7 @@ class HomeGetController extends GetxController {
 
   TextEditingController searchController = TextEditingController();
 
-  Future<void> loadWeatherData() async {
-    isLoading.value = true;
-    await _determinePosition().then((position) async {
-      print("position: ${position.latitude}, ${position.longitude}");
-      var headers = {'accept': 'application/json'};
-      var request = http.Request(
-          'GET',
-          Uri.parse(
-              'https://api.weatherapi.com/v1/current.json?q=${position.latitude}%2C${position.longitude}&lang=en&key=5b276e6121574a8fb2f192325232712'));
-
-      request.headers.addAll(headers);
-
-      http.StreamedResponse response = await request.send();
-
-      if (response.statusCode == 200) {
-        String responseString = await response.stream.bytesToString();
-        weatherResponseModel.value =
-            weatherResponseModelFromJson(responseString);
-      } else {
-        print(response.reasonPhrase);
-      }
-    });
-
-    isLoading.value = false;
-  }
-
-  Future<void> loadWeatherDataForLocation(double lat, double long) async {
-    isLoading.value = true;
-    var headers = {'accept': 'application/json'};
-    var request = http.Request(
-        'GET',
-        Uri.parse(
-            'https://api.weatherapi.com/v1/current.json?q=${lat}%2C${long}&lang=en&key=5b276e6121574a8fb2f192325232712'));
-
-    request.headers.addAll(headers);
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      String responseString = await response.stream.bytesToString();
-      weatherResponseModel.value = weatherResponseModelFromJson(responseString);
-    } else {
-      print(response.reasonPhrase);
-    }
-    isLoading.value = false;
-  }
-
-  Future<Position> _determinePosition() async {
+  Future<Position> determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -104,6 +57,56 @@ class HomeGetController extends GetxController {
     // continue accessing the position of the device.
     return await Geolocator.getCurrentPosition();
   }
+
+  Future<WeatherResponseModel> loadWeatherData() async {
+    isLoading.value = true;
+    Position position = await determinePosition();
+
+    print("position: ${position.latitude}, ${position.longitude}");
+    var headers = {'accept': 'application/json'};
+    var request = http.Request(
+        'GET',
+        Uri.parse(
+            'https://api.weatherapi.com/v1/current.json?q=${position.latitude}%2C${position.longitude}&lang=en&key=5b276e6121574a8fb2f192325232712'));
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      String responseString = await response.stream.bytesToString();
+      weatherResponseModel.value = weatherResponseModelFromJson(responseString);
+      isLoading.value = false;
+      return weatherResponseModelFromJson(responseString);
+    } else {
+      throw Exception('Failed to load weather data');
+    }
+  }
+
+  Future<WeatherResponseModel> loadWeatherDataForLocation(
+      double lat, double long) async {
+    isLoading.value = true;
+    var headers = {'accept': 'application/json'};
+    var request = http.Request(
+        'GET',
+        Uri.parse(
+            'https://api.weatherapi.com/v1/current.json?q=${lat}%2C${long}&lang=en&key=5b276e6121574a8fb2f192325232712'));
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      String responseString = await response.stream.bytesToString();
+      weatherResponseModel.value = weatherResponseModelFromJson(responseString);
+      isLoading.value = false;
+      return weatherResponseModel.value;
+    } else {
+      throw Exception('Failed to load weather data');
+    }
+  }
+
+  Geolocator geolocator = Geolocator();
 
   Future<List<SuggestionsModel>> loadSuggestions(String text) async {
     var headers = {'accept': 'application/json'};

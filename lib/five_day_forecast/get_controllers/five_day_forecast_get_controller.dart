@@ -8,6 +8,14 @@ class FiveDayForecastGetController extends GetxController {
 
   RxBool isLoading = false.obs;
 
+  late Geolocator _geolocator;
+
+  set geolocator(Geolocator value) {
+    _geolocator = value;
+  }
+
+  Geolocator get geolocator => _geolocator;
+
   @override
   void onInit() {
     loadForecastData();
@@ -16,7 +24,7 @@ class FiveDayForecastGetController extends GetxController {
 
   Future<void> loadForecastData() async {
     isLoading.value = true;
-    await _determinePosition().then((position) async {
+    await determinePosition().then((position) async {
       var headers = {'accept': 'application/json'};
       var request = http.Request(
           'GET',
@@ -37,7 +45,7 @@ class FiveDayForecastGetController extends GetxController {
     isLoading.value = false;
   }
 
-  Future<Position> _determinePosition() async {
+  Future<Position> determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
 
