@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:get/get.dart';
+import 'package:weather_app/models/forecast_model.dart';
 import 'package:weather_app/models/weather_response_model.dart';
 
+import '../get_controllers/five_day_forecast_get_controller.dart';
+
 class FiveDayForecastPage extends StatelessWidget {
-  const FiveDayForecastPage({super.key});
+  FiveDayForecastPage({super.key});
+
+  FiveDayForecastGetController getController =
+      Get.put(FiveDayForecastGetController());
 
   @override
   Widget build(BuildContext context) {
@@ -16,23 +23,54 @@ class FiveDayForecastPage extends StatelessWidget {
             height: 100.h,
             fit: BoxFit.fill,
           ),
-          ListView.builder(
-            itemBuilder: (context, index) {
-              return Container();
-            },
-            itemCount: 5,
+          SafeArea(
+            child: Padding(
+              padding: EdgeInsets.all(4.h),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                      "Today, ${getController.forecastModel.value.location.localtime}",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 2.h,
+                      )),
+                  Obx(() {
+                    return Text(
+                      getController.forecastModel.value.location.name,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 3.h,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    );
+                  }),
+                  Expanded(
+                    child: Obx(() {
+                      return !getController.isLoading.value
+                          ? ListView.builder(
+                              itemBuilder: (context, index) {
+                                return _weatherCard(getController.forecastModel
+                                    .value!.forecast.forecastday[index]);
+                              },
+                              itemCount: getController.forecastModel.value!
+                                  .forecast.forecastday.length)
+                          : Center(child: CircularProgressIndicator());
+                    }),
+                  ),
+                ],
+              ),
+            ),
           )
         ],
       ),
     );
   }
 
-  Widget _weatherCard(WeatherResponseModel weatherResponseModel) {
+  Widget _weatherCard(Forecastday day) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.w),
       child: Container(
-        height: 20.h,
-        width: 100.w,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.dp),
           gradient: LinearGradient(
@@ -45,12 +83,69 @@ class FiveDayForecastPage extends StatelessWidget {
             end: Alignment.bottomCenter,
           ),
         ),
-        padding: EdgeInsets.all(4.w),
+        padding: EdgeInsets.all(3.h),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
+            Text(day.date,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 2.h,
+                )),
+            Text(day.day.condition.text,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 2.h,
+                )),
+            SizedBox(height: 1.h),
+            Text("${day.day.avgtempC}°",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 5.h,
+                )),
+            SizedBox(height: 1.h),
+            Table(
+              border: TableBorder(
+                verticalInside: BorderSide(color: Colors.white, width: 0.3.dp),
+                top: BorderSide(color: Colors.white, width: 0.3.dp),
+              ),
               children: [
-                Image.network(weatherResponseModel.current.condition.icon)
+                TableRow(children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 1.h),
+                    child: Column(
+                      children: [
+                        Text("Humidity",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 1.5.h,
+                            )),
+                        Text("${day.day.avghumidity}%",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 2.h,
+                            )),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 1.h),
+                    child: Column(
+                      children: [
+                        Text("Wind",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 1.5.h,
+                            )),
+                        Text("${day.day.maxwindKph} km/h",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 2.h,
+                            )),
+                      ],
+                    ),
+                  ),
+                ])
               ],
             )
           ],
