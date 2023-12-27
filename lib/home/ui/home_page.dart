@@ -87,10 +87,12 @@ class HomePage extends StatelessWidget {
                                             Text("${suggestions[index].name},",
                                                 style: TextStyle(
                                                     fontSize: 4.w,
-                                                    fontWeight: FontWeight.bold)),
+                                                    fontWeight:
+                                                        FontWeight.bold)),
                                             Text(
                                                 "${suggestions[index].region}, ${suggestions[index].country}",
-                                                style: TextStyle(fontSize: 3.w)),
+                                                style:
+                                                    TextStyle(fontSize: 3.w)),
                                           ],
                                         ),
                                       );
@@ -143,14 +145,23 @@ class HomePage extends StatelessWidget {
       children: [
         Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xFF5271ff),
-                Color(0xFF38b6ff),
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
+            gradient: weatherResponseModel.current.isDay == 1
+                ? LinearGradient(
+                    colors: [
+                      Color(0xFF5271ff),
+                      Color(0xFF38b6ff),
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  )
+                : LinearGradient(
+                    colors: [
+                      Colors.grey.shade700,
+                      Colors.grey.shade500,
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
             borderRadius: BorderRadius.only(
               topRight: Radius.circular(8.w),
               bottomRight: Radius.circular(8.w),
@@ -170,18 +181,36 @@ class HomePage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Today, ${weatherResponseModel.location.localtime}",
-                    style: TextStyle(
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                              "Today, ${weatherResponseModel.location.localtime}",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 3.w,
+                              )),
+                          Text(
+                            weatherResponseModel.location.name,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 3.h,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(
+                      weatherResponseModel.current.isDay == 1
+                          ? Icons.sunny
+                          : Icons.nightlight_round,
                       color: Colors.white,
-                      fontSize: 3.w,
-                    )),
-                Text(
-                  weatherResponseModel.location.name,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 3.h,
-                    fontWeight: FontWeight.bold,
-                  ),
+                    )
+                  ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
