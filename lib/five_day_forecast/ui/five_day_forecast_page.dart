@@ -30,12 +30,14 @@ class FiveDayForecastPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                      "Today, ${getController.forecastModel.value.location.localtime}",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 2.h,
-                      )),
+                  Obx(() {
+                    return Text(
+                        "Today, ${getController.forecastModel.value.location.localtime}",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 2.h,
+                        ));
+                  }),
                   Obx(() {
                     return Text(
                       getController.forecastModel.value.location.name,
@@ -182,7 +184,7 @@ class FiveDayForecastPage extends StatelessWidget {
             Shimmer.fromColors(
               /*Color(0xff5788a8),
               Color(0xff5788a8),*/
-              baseColor: Color(0xff5788a8),
+              baseColor: Colors.grey,
               highlightColor: Color(0xff8ab8c3),
               child: Container(
                 decoration: BoxDecoration(
@@ -197,7 +199,7 @@ class FiveDayForecastPage extends StatelessWidget {
               ),
             ),
             Shimmer.fromColors(
-              baseColor: Color(0xff5788a8),
+              baseColor: Colors.grey,
               highlightColor: Color(0xff8ab8c3),
               child: Container(
                 decoration: BoxDecoration(
@@ -213,7 +215,7 @@ class FiveDayForecastPage extends StatelessWidget {
             ),
             SizedBox(height: 1.h),
             Shimmer.fromColors(
-              baseColor: Color(0xff5788a8),
+              baseColor: Colors.grey,
               highlightColor: Color(0xff8ab8c3),
               child: Container(
                 decoration: BoxDecoration(
@@ -240,7 +242,7 @@ class FiveDayForecastPage extends StatelessWidget {
                     child: Column(
                       children: [
                         Shimmer.fromColors(
-                          baseColor: Color(0xff5788a8),
+                          baseColor: Colors.grey,
                           highlightColor: Color(0xff8ab8c3),
                           child: Container(
                             decoration: BoxDecoration(
@@ -255,7 +257,7 @@ class FiveDayForecastPage extends StatelessWidget {
                           ),
                         ),
                         Shimmer.fromColors(
-                          baseColor: Color(0xff5788a8),
+                          baseColor: Colors.grey,
                           highlightColor: Color(0xff8ab8c3),
                           child: Container(
                             decoration: BoxDecoration(
@@ -277,7 +279,7 @@ class FiveDayForecastPage extends StatelessWidget {
                     child: Column(
                       children: [
                         Shimmer.fromColors(
-                          baseColor: Color(0xff5788a8),
+                          baseColor: Colors.grey,
                           highlightColor: Color(0xff8ab8c3),
                           child: Container(
                             decoration: BoxDecoration(
@@ -292,7 +294,7 @@ class FiveDayForecastPage extends StatelessWidget {
                           ),
                         ),
                         Shimmer.fromColors(
-                          baseColor: Color(0xff5788a8),
+                          baseColor: Colors.grey,
                           highlightColor: Color(0xff8ab8c3),
                           child: Container(
                             decoration: BoxDecoration(
